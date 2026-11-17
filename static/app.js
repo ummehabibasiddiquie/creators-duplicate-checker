@@ -35,11 +35,9 @@ function renderPage() {
   for (const row of reportRows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)) {
     const item = document.createElement("li");
     item.className = row.status;
-    const title = document.createElement("strong");
-    title.textContent = row.message;
-    const name = document.createElement("span");
+    const name = document.createElement("strong");
     name.textContent = row.handle || row.input || "—";
-    item.append(title, name);
+    item.append(name);
     if (row.country) {
       const country = document.createElement("span");
       country.textContent = row.country;

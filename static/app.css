@@ -89,6 +89,7 @@ button:disabled, .file.busy { opacity: 0.6; cursor: wait; }
   font-size: 30px;
   font-weight: 800;
   line-height: 1.2;
+  white-space: pre-line;
 }
 
 #message p.exists { background: #9f2d22; color: #fff; }
@@ -112,14 +113,8 @@ button:disabled, .file.busy { opacity: 0.6; cursor: wait; }
   font-weight: 800;
 }
 
-#rows strong { display: block; font-size: 16px; }
-#rows span { display: block; font-size: 16px; }
-#rows li.exists, #rows li.added { border-color: transparent; }
-#rows li.exists { background: #9f2d22; color: #fff; }
-#rows li.added { background: #1f6b45; color: #fff; }
-#rows li.exists strong, #rows li.added strong,
-#rows li.exists span, #rows li.added span { color: #fff; }
-#rows .invalid strong, #rows .mismatch strong { color: #8a5a12; }
+#rows strong { display: block; font-size: 16px; color: #1c1915; }
+#rows span { display: block; font-size: 16px; color: #1c1915; }
 
 .pager {
   display: flex;
@@ -130,6 +125,8 @@ button:disabled, .file.busy { opacity: 0.6; cursor: wait; }
   font-size: 16px;
   font-weight: 800;
 }
+
+.pager[hidden] { display: none !important; }
 
 .pager button {
   background: #fff;
