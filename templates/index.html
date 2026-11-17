@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Creator Duplicate checker</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}?v=15">
+</head>
+<body>
+  <main>
+    <h1>Creator Duplicate checker</h1>
+    <p class="lead">Paste handles, @names, or profile links. One on each line.</p>
+    <form id="check-form">
+      <label>
+        Check this list
+        <textarea id="check-text" rows="8" spellcheck="false" placeholder="@name&#10;https://www.instagram.com/name/&#10;anothername"></textarea>
+      </label>
+      <div class="actions">
+        <button type="submit" id="check-button">Check this list</button>
+        <label class="file">
+          Upload a file
+          <input id="check-file" type="file" accept=".xlsx,.csv">
+        </label>
+      </div>
+    </form>
+    <p class="file-note">The file uses Instagram Handle, Instagram Profile URL, and Country. <a href="/api/template.xlsx">Download the template</a>.</p>
+    <section id="result" hidden>
+      <p id="message"></p>
+      <ul id="rows"></ul>
+      <div class="pager" id="pager" hidden>
+        <button type="button" id="page-prev">Previous</button>
+        <span id="page-label">Page 1 of 1</span>
+        <button type="button" id="page-next">Next</button>
+      </div>
+    </section>
+  </main>
+  <script src="{{ url_for('static', filename='app.js') }}?v=15"></script>
+</body>
+</html>
