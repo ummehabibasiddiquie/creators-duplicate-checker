@@ -4,19 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Creator Duplicate checker</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}?v=15">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}?v=16">
 </head>
 <body>
   <main>
     <h1>Creator Duplicate checker</h1>
-    <p class="lead">Paste handles, @names, or profile links. One on each line.</p>
+    <p class="lead">Paste handles, @names, or profile links. One on each line. A name already saved is a duplicate.</p>
     <form id="check-form">
       <label>
-        Check this list
+        List
         <textarea id="check-text" rows="8" spellcheck="false" placeholder="@name&#10;https://www.instagram.com/name/&#10;anothername"></textarea>
       </label>
       <div class="actions">
-        <button type="submit" id="check-button">Check this list</button>
+        <button type="submit" id="check-button">Find duplicates</button>
         <label class="file">
           Upload a file
           <input id="check-file" type="file" accept=".xlsx,.csv">
@@ -34,6 +34,6 @@
       </div>
     </section>
   </main>
-  <script src="{{ url_for('static', filename='app.js') }}?v=15"></script>
+  <script src="{{ url_for('static', filename='app.js') }}?v=16"></script>
 </body>
 </html>

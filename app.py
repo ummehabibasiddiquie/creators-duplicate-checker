@@ -1806,16 +1806,16 @@ def settle_record(conn, record, source_name):
         return {
             "input": original,
             "status": "mismatch",
-            "message": "Handle and link are different names",
+            "message": "Handle and profile link do not match",
             "handle": parsed["display"] or "",
             "profile_url": cell_str(record.get("url")),
             "country": country,
         }
     if not parsed["primary"]:
         if parsed["url_kind"] in {"non_instagram", "post_link"}:
-            message = "Not an Instagram profile link"
+            message = "Not an Instagram profile"
         else:
-            message = "No username on this line"
+            message = "No Instagram username"
         return {
             "input": original,
             "status": "invalid",
@@ -1833,7 +1833,7 @@ def settle_record(conn, record, source_name):
         return {
             "input": original,
             "status": "exists",
-            "message": "Already exists",
+            "message": "Already in the master list",
             "handle": creator["handle"],
             "profile_url": creator["profile_url"] or creator["open_url"],
             "country": creator["country"] or country,
@@ -1859,7 +1859,7 @@ def settle_record(conn, record, source_name):
         return {
             "input": original,
             "status": "exists",
-            "message": "Already exists",
+            "message": "Already in the master list",
             "handle": result["handle"],
             "profile_url": profile_url,
             "country": country,
@@ -1867,7 +1867,7 @@ def settle_record(conn, record, source_name):
     return {
         "input": original,
         "status": "added",
-        "message": "Added to the master list",
+        "message": "New, added to the master list",
         "handle": result["handle"],
         "profile_url": profile_url,
         "country": country,

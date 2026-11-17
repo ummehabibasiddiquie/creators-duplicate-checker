@@ -57,15 +57,21 @@ function showReport(data) {
   rows.innerHTML = "";
   const added = data.added || 0;
   const exists = data.exists || 0;
-  if (data.rows.length === 1) {
+    if (data.rows.length === 1) {
     message.textContent = data.rows[0].message;
     message.className = data.rows[0].status;
   } else {
     const parts = [];
-    if (exists) parts.push(`${exists} already exist`);
-    if (added) parts.push(`${added} added to the master list`);
-    const other = data.rows.length - exists - added;
-    if (other) parts.push(`${other} could not be checked`);
+    if (exists) parts.push(`${exists} already in the master list`);
+    if (added) parts.push(`${added} new, added to the master list`);
+    const reasons = {};
+    for (const row of data.rows) {
+      if (row.status === "exists" || row.status === "added") continue;
+      reasons[row.message] = (reasons[row.message] || 0) + 1;
+    }
+    for (const [reason, count] of Object.entries(reasons)) {
+      parts.push(`${count} — ${reason}`);
+    }
     message.textContent = parts.join(". ") + ".";
     message.className = added && exists ? "mixed" : added ? "added" : exists ? "exists" : "invalid";
   }
@@ -83,7 +89,7 @@ async function send(body, isFile) {
       body: JSON.stringify(body),
     });
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error || "The check could not be finished.");
+    if (!response.ok) throw new Error(data.error || "The list could not be read.");
     showReport(data);
   } catch (error) {
     showError(error.message);
