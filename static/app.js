@@ -1,6 +1,5 @@
 const form = document.querySelector("#check-form");
 const text = document.querySelector("#check-text");
-const fileInput = document.querySelector("#check-file");
 const button = document.querySelector("#check-button");
 const result = document.querySelector("#result");
 const message = document.querySelector("#message");
@@ -15,13 +14,15 @@ let page = 1;
 
 function setBusy(busy) {
   button.disabled = busy;
-  fileInput.disabled = busy;
 }
 
 function showError(textValue) {
   result.hidden = false;
-  message.className = "invalid";
-  message.textContent = textValue;
+  message.innerHTML = "";
+  const line = document.createElement("p");
+  line.className = "invalid";
+  line.textContent = textValue;
+  message.append(line);
   reportRows = [];
   rows.innerHTML = "";
   pager.hidden = true;
@@ -55,25 +56,29 @@ function renderPage() {
 function showReport(data) {
   result.hidden = false;
   rows.innerHTML = "";
+  message.innerHTML = "";
   const added = data.added || 0;
   const exists = data.exists || 0;
-    if (data.rows.length === 1) {
-    message.textContent = data.rows[0].message;
-    message.className = data.rows[0].status;
+  const lines = [];
+  if (data.rows.length === 1) {
+    lines.push({ status: data.rows[0].status, text: data.rows[0].message });
   } else {
-    const parts = [];
-    if (exists) parts.push(`${exists} already in the master list`);
-    if (added) parts.push(`${added} new, added to the master list`);
+    if (exists) lines.push({ status: "exists", text: `${exists} already in the master list` });
+    if (added) lines.push({ status: "added", text: `${added} new, added to the master list` });
     const reasons = {};
     for (const row of data.rows) {
       if (row.status === "exists" || row.status === "added") continue;
       reasons[row.message] = (reasons[row.message] || 0) + 1;
     }
     for (const [reason, count] of Object.entries(reasons)) {
-      parts.push(`${count} — ${reason}`);
+      lines.push({ status: "invalid", text: `${count} — ${reason}` });
     }
-    message.textContent = parts.join(". ") + ".";
-    message.className = added && exists ? "mixed" : added ? "added" : exists ? "exists" : "invalid";
+  }
+  for (const line of lines) {
+    const item = document.createElement("p");
+    item.className = line.status;
+    item.textContent = line.text;
+    message.append(item);
   }
   reportRows = data.rows;
   page = 1;
@@ -118,13 +123,4 @@ pagePrev.addEventListener("click", () => {
 pageNext.addEventListener("click", () => {
   page += 1;
   renderPage();
-});
-
-fileInput.addEventListener("change", () => {
-  const file = fileInput.files[0];
-  fileInput.value = "";
-  if (!file) return;
-  const body = new FormData();
-  body.append("file", file);
-  send(body, true);
 });

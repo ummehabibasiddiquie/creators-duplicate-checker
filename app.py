@@ -386,7 +386,10 @@ def cell_str(value) -> str:
         return ""
     if isinstance(value, float) and value.is_integer():
         return str(int(value))
-    return str(value).strip()
+    text = str(value)
+    for mark in ("\u00a0", "\u200b", "\u200c", "\u200d", "\ufeff"):
+        text = text.replace(mark, " " if mark == "\u00a0" else "")
+    return text.strip()
 
 
 def inspect_url(value):
@@ -745,13 +748,18 @@ def outcome_for(creator) -> str:
 
 
 def find_creators(conn, *names):
-    keys = [name for name in dict.fromkeys(names) if name]
+    keys = []
+    for name in names:
+        token = clean_token(name) if name else ""
+        if token and token not in keys:
+            keys.append(token)
     found = {}
     for key in keys:
         rows = conn.execute(
             """
             SELECT * FROM creators
-            WHERE username = ? OR (url_username IS NOT NULL AND url_username = ?)
+            WHERE REPLACE(LOWER(username), ' ', '') = ?
+               OR (url_username IS NOT NULL AND REPLACE(LOWER(url_username), ' ', '') = ?)
             """,
             (key, key),
         ).fetchall()
