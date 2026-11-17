@@ -25,6 +25,7 @@ function showError(textValue) {
   message.append(line);
   reportRows = [];
   rows.innerHTML = "";
+  rows.hidden = true;
   pager.hidden = true;
 }
 
@@ -34,7 +35,6 @@ function renderPage() {
   page = Math.min(Math.max(page, 1), pages);
   for (const row of reportRows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)) {
     const item = document.createElement("li");
-    item.className = row.status;
     const name = document.createElement("strong");
     name.textContent = row.handle || row.input || "—";
     item.append(name);
@@ -58,19 +58,23 @@ function showReport(data) {
   const added = data.added || 0;
   const exists = data.exists || 0;
   const lines = [];
-  if (data.rows.length === 1) {
-    lines.push({ status: data.rows[0].status, text: data.rows[0].message });
-  } else {
-    if (exists) lines.push({ status: "exists", text: `${exists} already in the master list` });
-    if (added) lines.push({ status: "added", text: `${added} new, added to the master list` });
-    const reasons = {};
-    for (const row of data.rows) {
-      if (row.status === "exists" || row.status === "added") continue;
-      reasons[row.message] = (reasons[row.message] || 0) + 1;
-    }
-    for (const [reason, count] of Object.entries(reasons)) {
-      lines.push({ status: "invalid", text: `${count} — ${reason}` });
-    }
+  if (exists === 1 && !added) {
+    lines.push({ status: "exists", text: "Already in the master list" });
+  } else if (exists) {
+    lines.push({ status: "exists", text: `${exists} already in the master list` });
+  }
+  if (added === 1) {
+    lines.push({ status: "added", text: "1 new, added to the master list" });
+  } else if (added) {
+    lines.push({ status: "added", text: `${added} new, added to the master list` });
+  }
+  const reasons = {};
+  for (const row of data.rows) {
+    if (row.status === "exists" || row.status === "added") continue;
+    reasons[row.message] = (reasons[row.message] || 0) + 1;
+  }
+  for (const [reason, count] of Object.entries(reasons)) {
+    lines.push({ status: "invalid", text: `${count} — ${reason}` });
   }
   for (const line of lines) {
     const item = document.createElement("p");
@@ -78,7 +82,8 @@ function showReport(data) {
     item.textContent = line.text;
     message.append(item);
   }
-  reportRows = data.rows;
+  reportRows = data.rows.filter((row) => row.status === "added");
+  rows.hidden = reportRows.length === 0;
   page = 1;
   renderPage();
 }

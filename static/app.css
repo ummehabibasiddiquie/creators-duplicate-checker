@@ -105,6 +105,8 @@ button:disabled, .file.busy { opacity: 0.6; cursor: wait; }
   gap: 8px;
 }
 
+#rows[hidden] { display: none !important; }
+
 #rows li {
   background: #fff;
   border: 2px solid #1c1915;
