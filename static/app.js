@@ -6,7 +6,6 @@ const message = document.querySelector("#message");
 const unique = document.querySelector("#unique");
 const rows = document.querySelector("#rows");
 const copyAllButton = document.querySelector("#copy-all");
-const copyHandlesButton = document.querySelector("#copy-handles");
 const copyUrlsButton = document.querySelector("#copy-urls");
 const pager = document.querySelector("#pager");
 const pageLabel = document.querySelector("#page-label");
@@ -100,7 +99,6 @@ function showReport(data) {
   reportRows = data.rows.filter((row) => row.status === "added");
   unique.hidden = reportRows.length === 0;
   copyAllButton.textContent = "Copy all";
-  copyHandlesButton.textContent = "Copy handles";
   copyUrlsButton.textContent = "Copy URLs";
   page = 1;
   renderPage();
@@ -110,7 +108,6 @@ function uniqueLines(kind) {
   return reportRows.map((row) => {
     const name = creatorName(row);
     const url = profileUrl(row);
-    if (kind === "handles") return name;
     if (kind === "urls") return url;
     return `${name}\t${url}`;
   }).filter(Boolean);
@@ -182,10 +179,6 @@ text.addEventListener("keydown", (event) => {
 
 copyAllButton.addEventListener("click", () => {
   copyUnique("all", copyAllButton, "Copy all");
-});
-
-copyHandlesButton.addEventListener("click", () => {
-  copyUnique("handles", copyHandlesButton, "Copy handles");
 });
 
 copyUrlsButton.addEventListener("click", () => {
